@@ -39,6 +39,7 @@ var Testfield = [10][10]rune{
 //====================================================[↓ FUNCTION ↓]====================================================
 //======================================================================================================================
 
+// Impression du tableau dans la console
 func PrintField(field [10][10]rune) {
 	LOT_OF_SPACE_SHEEESH()
 
@@ -61,12 +62,18 @@ func PrintField(field [10][10]rune) {
 	LOT_OF_SPACE_SHEEESH()
 }
 
+//----------------------------------------------------------------------------------------------------------------------
+
+// Juste pour foutre plein d'espaces
 func LOT_OF_SPACE_SHEEESH() {
 	for i := 0; i < 3; i++ {
 		z01.PrintRune('\n')
 	}
 }
 
+//----------------------------------------------------------------------------------------------------------------------
+
+// Impression des mots trouvés avec mise en forme
 func PrintAllWords(Words []string) {
 	z01.PrintRune('[')
 	for i := 0; i < len(Words); i++ {
@@ -83,6 +90,8 @@ func PrintAllWords(Words []string) {
 	z01.PrintRune('\n')
 }
 
+//----------------------------------------------------------------------------------------------------------------------
+// Permet de voir si on a trouvé un/des mots ou pas
 func PrintNoWords(Bool bool) {
 	if Bool == false {
 		Array := [1]string{"Words Founded: "}
@@ -106,6 +115,8 @@ func PrintNoWords(Bool bool) {
 //======================================================================================================================
 //====================================================[↓ REAL SHIT ↓]===================================================
 //======================================================================================================================
+
+// Permet de mettre chaque mot dans un array
 func GetArrayFromWords() []string {
 	readFile, _ := os.Open("words.txt")
 	fileScanner := bufio.NewScanner(readFile)
@@ -119,23 +130,8 @@ func GetArrayFromWords() []string {
 	return array
 }
 
-func NewArray(FirstLetter rune, SecondLetter rune, Words []string) []string {
-	WordIncrease := 0
-	NewArray := []string{}
-
-	for i := 0; i < len(Words); i++ {
-
-		if FirstLetter == rune(Words[i][0]) && SecondLetter == rune(Words[i][1]) {
-			NewArray = append(NewArray, Words[WordIncrease])
-		}
-
-		if WordIncrease != len(Words)-1 {
-			WordIncrease++
-		}
-	}
-	return NewArray
-}
-
+//----------------------------------------------------------------------------------------------------------------------
+// Fonction principale
 func WordScrabbleSolver(field [10][10]rune) {
 	FinalArray := []string{}
 	Temp := []string{}
@@ -143,20 +139,29 @@ func WordScrabbleSolver(field [10][10]rune) {
 
 	for i := 0; i < len(field); i++ {
 		for j := 0; j < len(field[i]); j++ {
+
+			// On check chaque mot de la liste
 			for WordIncrease := 0; WordIncrease < len(words); WordIncrease++ {
 
+				// On vérifie si la lettre est la même que la première de l'un des mots du fichier texte (si non on change de lettre dans le tableau)
 				if field[i][j] == rune(words[WordIncrease][0]) {
 
+					// Verification Horizontal
 					if j != len(field[i])-1 && field[i][j+1] == rune(words[WordIncrease][1]) {
 						Temp = VeryfHorizontal(i, j, words[WordIncrease], field)
 						FinalArray = append(FinalArray, Temp...)
 
+						// Verification de la verticale
 					} else if i != len(field)-1 && field[i+1][j] == rune(words[WordIncrease][1]) {
 						Temp = VeryfVertical(i, j, words[WordIncrease], field)
 						FinalArray = append(FinalArray, Temp...)
+
+						// Verification de la diagonale en partant de la gauche vers bas droite
 					} else if i != len(field)-1 && j != len(field[i])-1 && field[i+1][j+1] == rune(words[WordIncrease][1]) {
 						Temp = VeryfBottomRight(i, j, words[WordIncrease], field)
 						FinalArray = append(FinalArray, Temp...)
+
+						// Verification de la diagonale en partant de la gauche vers haut droite
 					} else if i != 0 && j != len(field[i])-1 && field[i-1][j+1] == rune(words[WordIncrease][1]) {
 						Temp = VeryfTopRight(i, j, words[WordIncrease], field)
 						FinalArray = append(FinalArray, Temp...)
@@ -167,6 +172,7 @@ func WordScrabbleSolver(field [10][10]rune) {
 		}
 	}
 
+	// Condition pour savoir si on a trouvé des mots ou non
 	if len(FinalArray) > 1 {
 		PrintNoWords(false)
 		PrintAllWords(FinalArray)
@@ -175,6 +181,9 @@ func WordScrabbleSolver(field [10][10]rune) {
 	}
 }
 
+//----------------------------------------------------------------------------------------------------------------------
+
+// Cette fonction est utilisable pour toutes les directions possible, il suffit de changer les conditions (i et j) et laquelle de ces condiotions augmentes ou diminues (donc en gros tout ce qu'il y a en dessous c'est du copié collé, masterclass)
 func VeryfHorizontal(x int, y int, NewWordsList string, field [10][10]rune) []string {
 	array := []string{}
 	Count := 0
@@ -184,23 +193,24 @@ func VeryfHorizontal(x int, y int, NewWordsList string, field [10][10]rune) []st
 
 		if field[x][j] == rune(NewWordsList[LetterIncrease]) {
 			Count += 1
-
+			// A chaque lettre qui correspond, j'ajoute +1 à "Count", donc si mon Count est égal à la longueur du mot, cela veux dire que j'ai trouvé le mot qui correspond
 			if Count == len(NewWordsList) {
 				array = append(array, NewWordsList)
-				// fmt.Println("Found: ", NewWordsList)
 				break
 			}
 			if LetterIncrease != len(NewWordsList)-1 {
 				LetterIncrease++
 			}
-
 		} else {
+			// Ne pas oublier de reset "Count" en cas d'echec
 			Count = 0
 		}
 	}
 	return array
 }
 
+//----------------------------------------------------------------------------------------------------------------------
+// Copy+paste de la fonction précédente
 func VeryfVertical(x int, y int, NewWordsList string, field [10][10]rune) []string {
 	array := []string{}
 	Count := 0
@@ -213,7 +223,6 @@ func VeryfVertical(x int, y int, NewWordsList string, field [10][10]rune) []stri
 
 			if Count == len(NewWordsList) {
 				array = append(array, NewWordsList)
-				// fmt.Println("Found: ", NewWordsList)
 				break
 			}
 			if LetterIncrease != len(NewWordsList)-1 {
@@ -227,6 +236,8 @@ func VeryfVertical(x int, y int, NewWordsList string, field [10][10]rune) []stri
 	return array
 }
 
+//----------------------------------------------------------------------------------------------------------------------
+// Pareil que la précédente
 func VeryfBottomRight(x int, y int, NewWordsList string, field [10][10]rune) []string {
 	array := []string{}
 	Count := 0
@@ -241,7 +252,6 @@ func VeryfBottomRight(x int, y int, NewWordsList string, field [10][10]rune) []s
 
 			if Count == len(NewWordsList) {
 				array = append(array, NewWordsList)
-				// fmt.Println("Found: ", NewWordsList)
 				break
 			}
 
@@ -262,6 +272,8 @@ func VeryfBottomRight(x int, y int, NewWordsList string, field [10][10]rune) []s
 	return array
 }
 
+//----------------------------------------------------------------------------------------------------------------------
+// Encore pareil toujours similaire à la précédente
 func VeryfTopRight(x int, y int, NewWordsList string, field [10][10]rune) []string {
 	array := []string{}
 	Count := 0
@@ -276,7 +288,6 @@ func VeryfTopRight(x int, y int, NewWordsList string, field [10][10]rune) []stri
 
 			if Count == len(NewWordsList) {
 				array = append(array, NewWordsList)
-				// fmt.Println("Found: ", NewWordsList)
 				break
 			}
 
@@ -301,7 +312,10 @@ func VeryfTopRight(x int, y int, NewWordsList string, field [10][10]rune) []stri
 //====================================================[↓ MAIN ↓]=======================================================
 //======================================================================================================================
 func main() {
+
+	// Changer le "field" par le nom du nouveau tableau pour effectuer des tests
 	FIELD := field
+
 	PrintField(FIELD)
 	WordScrabbleSolver(FIELD)
 }
