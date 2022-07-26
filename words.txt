@@ -34,7 +34,7 @@ famille
 pantalon
 chaussures
 cintre
-boîte
+boite
 echarpe
 montre
 chemise
@@ -48,7 +48,7 @@ caravane
 table
 grilles
 camion
-pâtisserie
+patisserie
 grains
 jute
 cafe
