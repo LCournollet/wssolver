@@ -24,7 +24,7 @@ var field = [10][10]rune{
 }
 
 var Test_Field = [1][10]rune{
-	{'p', 'r', 'e', 's', 't', 'a', 't', 'a', 'i', 'z'},
+	{'c', 'a', 'f', 'e', 'p', 'r', 'o', 'u', 't', 'z'},
 }
 
 var Test_Field_2 = [4][1]rune{
@@ -107,9 +107,8 @@ func WordScrabbleSolver(field [1][10]rune) {
 				if field[i][j] == rune(words[WordIncrease][0]) {
 					if j != len(field[i])-1 {
 						if field[i][j+1] == rune(words[WordIncrease][1]) {
-
-							NewWordsList := NewArray(field[i][j], field[i][j+1], words)
-							VeryfHorizontal(i, j, NewWordsList, field)
+							// NewWordsList := NewArray(field[i][j], field[i][j+1], words)
+							VeryfHorizontal(i, j, words[WordIncrease], field)
 						}
 					}
 				}
@@ -118,35 +117,28 @@ func WordScrabbleSolver(field [1][10]rune) {
 	}
 }
 
-func VeryfHorizontal(x int, y int, NewWordsList []string, field [1][10]rune) []string {
-	fmt.Println("-----------------------RESET-----------------------------")
+func VeryfHorizontal(x int, y int, NewWordsList string, field [1][10]rune) []string {
 	array := []string{}
 	Count := 0
-	WordIncrease := 0
+	// WordIncrease := 0
 	LetterIncrease := 0
-	fmt.Println("Y: ", y)
-	k := y
 	for j := y; j < len(field[x]); j++ {
-		Word := NewWordsList[WordIncrease]
-		if field[x][j] == rune(NewWordsList[WordIncrease][LetterIncrease]) {
-			fmt.Println("hey")
-			fmt.Println("J BUT YOU KNOW: ", j)
-			fmt.Println(string(field[x][j]), "//", string(NewWordsList[WordIncrease][LetterIncrease]))
+		if field[x][j] == rune(NewWordsList[LetterIncrease]) {
 			Count += 1
-			if Count == len(NewWordsList[WordIncrease]) {
-				array = append(array, NewWordsList[WordIncrease])
+			if Count == len(NewWordsList) {
+				array = append(array, NewWordsList)
 				fmt.Println("FOUNDED THE WORD: ", array)
 				return array
 			}
-			if LetterIncrease != len(Word)-1 {
+			if LetterIncrease != len(NewWordsList)-1 {
 				LetterIncrease++
 			}
-		} else if WordIncrease != len(NewWordsList)-1 {
-			Count = 0
-			j = k
-			fmt.Println("J: ", j)
-			WordIncrease++
 		}
+		// } else if WordIncrease != len(NewWordsList)-1 {
+		// 	Count = 0
+		// 	j = y
+		// 	WordIncrease++
+		// }
 	}
 	return array
 }
@@ -166,11 +158,14 @@ func VeryfTopRight(field [10][10]rune) {
 //====================================================[↓ MAIN ↓]=======================================================
 //======================================================================================================================
 func main() {
-	// k := -1
-	// for j := 0; j < 1; j++ {
-	// 	fmt.Println("Hello")
-	// 	j = k
+	// y := 0
+	// for j := y; j < 5; j++ {
 	// 	fmt.Println(j)
+	// 	// k := y
+	// 	fmt.Println("Hello")
+	// 	if j == 4 {
+	// 		j = 0
+	// 	}
 	// }
 	// PrintField(field)
 	WordScrabbleSolver(Test_Field)

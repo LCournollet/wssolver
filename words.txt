@@ -4,8 +4,9 @@ carousselle
 cul
 cheval
 tesqt
-prems
 presque
+prems
+premia
 prestatai
 prout
 caca
